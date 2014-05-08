@@ -1,0 +1,32 @@
+Diloo - source code
+======================
+
+## Requirements ##
++ Python
++ Pip
++ Python sqlite3
++ Virtualenv
+
+## Create virtualenv ##
+
+To control packages, need a virtualenv so you can create one, example:
+
+`virtualenv env --no-site-packages`
+
+and activate it
+
+Windows: `/env/bin/activate`
+
+Unix system: `source env/bin/activate`
+
+## Download packages ##
+
+Just run:
+
+`pip install -r requirements.txt`
+
+## Run project ##
+
+Run it:
+
+`python manage.py runserver`
