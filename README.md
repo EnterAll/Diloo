@@ -7,6 +7,10 @@ Diloo - source code
 + Python sqlite3
 + Virtualenv
 
+## Clone project ##
+
+`git clone https://github.com/EnterAll/Diloo.git`
+
 ## Create virtualenv ##
 
 To control packages, need a virtualenv so you can create one, example:
