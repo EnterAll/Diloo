@@ -1,0 +1,48 @@
+{% extends "base.html" %} 
+{% load humanize %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% if exists %}
+        <div id="feed-publico" class="col-sm-8 col-md-4 feed">
+            <div class="jumbotron">
+                <a href="#" class="thumbnail">
+                    <img src="{{ f_critic.image }}" data-src="holder.js/100x100" alt="...">
+                </a>
+                <h2> <a href="/p/{{f_critic}}">@{{f_critic}}</a></h2>
+                <p>Se unió: {{f_critic.pub_date|naturaltime}}</p>
+                Críticas: {{reviews.count}}
+            </div>
+        </div>
+        <div id="feed-privado" class="hero-unit col-sm-8 col-md-8 feed">
+            <div class="jumbotron">
+                {% for review in reviews %}
+                <div class="media post" style="{background: gray;position: absolute; bottom: 0;}">
+                    <div class="media post">
+                        <a class="pull-left" href="/p/{{review.critic}}">
+                            <img class="media-object img-rounded" src="{{ review.critic.image }}" width="50" height="50">
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading">{{ review.title }} <small>{{review.pub_date|naturaltime}}</small></h4>
+                            {{ review.content }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+
+        <div class="jumbotron">
+            <div class="page-header">
+                <h1>¡Lo sentimos!
+                    <small>No se encuentra el perfil.</small>
+                </h1>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
