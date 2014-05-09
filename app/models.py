@@ -7,7 +7,7 @@ class Critic(models.Model):
     readers = models.ManyToManyField("self", blank=True)
     to_read = models.ManyToManyField("self", blank=True)
     display_name = models.CharField(max_length=50)
-    image = image = models.CharField(max_length=300)
+    image = image = models.URLField()
     pub_date = models.DateTimeField(auto_now=True, auto_now_add=True)
     class Meta:
         verbose_name_plural = "Critics"
@@ -40,11 +40,21 @@ class Score(models.Model):
     def __unicode__(self):
         return self.critic.user.username + ' - ' + self.avg
 
+class Opinion(models.Model):
+    critic = models.ForeignKey(Critic)
+    content = models.TextField()
+    pub_date = models.DateTimeField(auto_now=True, auto_now_add=True)
+    class Meta:
+        verbose_name_plural = "Opinions"
+    def __unicode__(self):
+        return self.critic.user.username + ' - ' + self.content
+
 class Review(models.Model):
     critic = models.ForeignKey(Critic)
     category = models.ForeignKey(Category)
     topics = models.ManyToManyField(Topic, blank=True)
     scores = models.ManyToManyField(Score, blank=True)
+    opinions = models.ManyToManyField(Opinion, blank=True)
     pre_content = models.TextField()
     content = models.TextField()
     pub_date = models.DateTimeField(auto_now=True, auto_now_add=True)
@@ -54,3 +64,11 @@ class Review(models.Model):
         verbose_name_plural = "Reviews"
     def __unicode__(self):
         return self.critic.user.username + ' - ' + self.content
+
+
+
+
+
+
+
+
