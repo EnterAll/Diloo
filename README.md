@@ -13,7 +13,7 @@ Diloo - source code
 
 ## Create virtualenv ##
 
-To control packages, need a virtualenv so you can create one, example:
+To control packages, needed a virtualenv so you can create one, example:
 
 `virtualenv env --no-site-packages`
 
