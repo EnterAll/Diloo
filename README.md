@@ -19,7 +19,7 @@ To control packages, needed a virtualenv so you can create one, example:
 
 and activate it
 
-Windows: `/env/bin/activate`
+Windows: `env\Scripts\activate`
 
 Unix system: `source env/bin/activate`
 
