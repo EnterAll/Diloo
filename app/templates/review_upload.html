@@ -1,7 +1,114 @@
-{% extends "base.html"%}
+{% extends "base.html"%} 
+
+{% block extras %} 
+
+<link rel="stylesheet" href="/static/css/bootstrap-editor.min.css">
+<link rel="stylesheet" href="/static/css/medium-editor.min.css">
+
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+{% endblock %} 
 
 {% block content %}
 
+<!-- <div class="container">
+<form class="form" role="form" method="POST" action="/ur">
+	<div class="form-group">
+	    <input type="text" class="form-control input-lg" id="title" name="title" placeholder="Título">
+	</div>
+	<div class="form-group">
+	    <div id="epiceditor">
+	    	<textarea name="content" id="txt" style="display:none"></textarea>
+	    </div>
+    </div>
+    <div class="form-group">
+    	<label for="topictags">Topic Tags</label>
+	    <input type="text" class="form-control" id="topictags" name="topictags" placeholder="">
+    </div>
+    <div class="form-group">
+   		<button type="submit" class="btn btn-diloo">Publicar</button>
+   	</div>
+</form>
+</div> -->
+<div class="container" style="{background-color:#fff;}">
+    <div class="jumbotron">
+        <div class="form">
+            <div class="form-group inline">
+                <div id="title" class="editable">
+                    Título
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="editable" id="content" style="background-color:#eee;min-height:500px;">
+                    ¿Qué opinas de esto?
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="topictags">Topic Tags</label>
+                <input type="text" class="form-control" id="topictags" name="topictags" placeholder="">
+            </div>
+            <div class="form-group">
+                <select class="form-control input-lg" id="category" name="category" placeholder="Categoría">
+                    <option selected="selected">¿Qué categoría es?</option>
+                    <option value=""></option>
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button id= "btnSend" type="submit" class="btn btn-diloo">Publicar</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script src="/static/js/medium-editor.min.js"></script>
+<script>
+var editorTitle = new MediumEditor('#title',{
+    disableToolbar: true,
+    forcePlainText: true,
+    cleanPastedHTML: true
+});
+var editorContent = new MediumEditor('#content',{
+    buttons: ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote', 'image', 'pre'],
+    cleanPastedHTML: true
+});
 
 
+$('#btnSend').click(function(e){
+    e.preventDefault();
+    var reviewTitle = editorTitle.serialize();
+    var reviewContent = editorContent.serialize();
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    var csrftoken = $.cookie('csrftoken');
+    $.ajaxSetup({
+        crossDomain: false, // obviates need for sameOrigin test
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    }); 
+
+    $.ajax({
+        type: 'POST',
+        url: '/ur',
+        data: {title: reviewTitle.title.value , content: reviewContent.content.value},
+        success: function(data){
+            document.location = '/d/' + data;
+        },
+        error: function(xhr, textStatus, thrownError){
+            alert('Algo está mal, intenta de nuevo');
+        }
+
+    });
+
+    return false;
+    
+});
+
+</script>
 {% endblock %}

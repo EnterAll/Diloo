@@ -1,0 +1,25 @@
+{% extends "base.html"%}
+{% load humanize %}
+{% load markdown_deux_tags %}
+{% block content %} 
+{% if review %}
+
+<div class="container">
+	<div class="jumbotron">
+		<h2>{{review.title}} <small>{{review.pub_date|naturaltime}}</small></h2> 
+
+		<p>{{review.content|markdown:"STYLE"}}</p>
+
+		<p>{% if review.topics %}
+			{% for topic in review.topics.all %} 
+				{{topic.name}} 
+			{%endfor%}
+			{% endif %}</p>
+	</div>
+</div>
+
+{% else %} 
+<h1>No se encuentra la crítica</h1>
+{% endif %}
+
+{% endblock %} 

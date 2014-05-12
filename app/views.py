@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import Q
 
 from app.models import Category, Review, Critic
-from app.forms import UserForm, CriticForm
+from app.forms import UserForm, CriticForm, ReviewForm
 
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
@@ -111,7 +111,6 @@ def profile(request, username):
         pass
     if request.user.is_active:
         critic = Critic.objects.get(user=request.user)
-    t_reviews = 0
     if user is not None:
         exists = True
         f_critic = Critic.objects.get(user=user)
@@ -150,9 +149,39 @@ def search(request):
     
     return render_to_response("search.html", {"reviews": reviews, "critics": critics})
 
+def review(request, number):
+    context = RequestContext(request)
+    critic = None
+    review = None
+    try:
+        review = Review.objects.get(id=number)
+        review.readings = review.readings + 1;
+        review.save()
+        critic = Critic.objects.get(user=request.user)
+    except Exception, e:
+        pass
+    
+    return render_to_response("review.html", {'review':review, 'critic':critic}, context)
 
+@login_required(login_url='/login')
+def review_upload(request):
+    context = RequestContext(request)
+    critic = Critic.objects.get(user=request.user)
+    return render_to_response("review_upload.html", {"critic": critic}, context)
 
+@login_required(login_url='/login')
+def ur(request):
+    context = RequestContext(request)
+    review = Review()
+    review.content = request.POST['content']
+    review.title = request.POST['title']
+    review.category = Category.objects.get(id=1)
+    review.readings = 0
+    review.critic = Critic.objects.get(user=request.user)
+    review.save()
 
+    return HttpResponse(review.id)
+    
 
 
 

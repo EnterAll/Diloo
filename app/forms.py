@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from app.models import Critic
+from app.models import Critic, Review
 
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -58,9 +58,13 @@ class UserForm(forms.ModelForm):
 		return user
 
 class CriticForm(forms.ModelForm):
-	class Meta:
-   		model = Critic
+  class Meta:
+    model = Critic
 
+class ReviewForm(forms.ModelForm):
+  class Meta:
+    model = Review
+    fields = ("title", "content", )
 
 
 

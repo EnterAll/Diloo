@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 # Create your models here.
 
 class Critic(models.Model):
@@ -57,9 +58,15 @@ class Review(models.Model):
     opinions = models.ManyToManyField(Opinion, blank=True)
     pre_content = models.TextField()
     content = models.TextField()
-    pub_date = models.DateTimeField(auto_now=True, auto_now_add=True)
+    pub_date = models.DateTimeField(editable=False)
     title = models.CharField(max_length=100) 
     readings = models.IntegerField()
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.pub_date = datetime.datetime.today()
+        return super(Review, self).save(*args, **kwargs)
     class Meta:
         verbose_name_plural = "Reviews"
     def __unicode__(self):

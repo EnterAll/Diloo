@@ -5,7 +5,7 @@
 </li>
 
 
-{% endfor %} {% endblock %} {%block feed %} {% if user.is_active %}
+{% endfor %} {% endblock %} {%block content %} {% if user.is_active %}
 <div id="feed-publico" class="col-sm-8 col-md-6 feed">
     <h1>¿Qué ocurre?</h1>
     {% for review in reviews %}
@@ -15,7 +15,7 @@
             <img class="media-object img-rounded" src="{{ review.critic.image }}" width="50" height="50">
         </a>
         <div class="media-body">
-            <h4 class="media-heading">{{ review.title }}</h4>
+            <h4 class="media-heading">{{ review.title| }}</h4>
             {{ review.content }}
         </div>
     </div>

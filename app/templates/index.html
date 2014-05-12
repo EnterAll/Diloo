@@ -1,4 +1,7 @@
-{% extends "base.html" %} {%block feed %}
+{% extends "base.html" %} 
+{% load humanize %}
+{% load markdown_deux_tags %}
+{%block content %}
 <div id="feed-publico" class="col-sm-8 col-md-4 feed">
     <div class="jumbotron">
         <h2>Entrar a Diloo</h2>
@@ -44,7 +47,7 @@
 
 <div id="feed-privado" class="hero-unit col-sm-8 col-md-8 feed">
     <div class="jumbotron">
-        <h1>Diloo - Pensamiento crítico</h1>
+        <h2>Diloo - Pensamiento crítico</h2>
         {% for review in reviews %}
         <div class="media post" style="{background: gray;position: absolute; bottom: 0;}">
             <div class="media post">
@@ -52,8 +55,8 @@
                     <img class="media-object img-rounded" src="{{ review.critic.image }}" width="50" height="50">
                 </a>
                 <div class="media-body">
-                    <h4 class="media-heading">{{ review.title }}</h4>
-                    {{ review.content }}
+                    <h4 class="media-heading">{{review.title}} <small><a href="/d/{{ review.id }}">{{ review.pub_date|naturaltime }}</a></small></h4>
+                    {{ review.content|markdown:"STYLE" }}
                 </div>
             </div>
         </div>

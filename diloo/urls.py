@@ -20,5 +20,8 @@ urlpatterns = patterns('',
     url(r'^u/edit$', 'app.views.user_profile_configuration', name="user_profile_configuration"),
     url(r'^s$', 'app.views.search', name="search_short"),
     url(r'^search$', 'app.views.search', name="search"),
+    url(r'^d/(?P<number>\d+)$', 'app.views.review', name="review"),
+    url(r'^r/u$', 'app.views.review_upload', name="review_upload"),
+    url(r'^ur$', 'app.views.ur', name="ur"),
 )
 
