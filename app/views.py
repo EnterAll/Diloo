@@ -220,5 +220,7 @@ def review_heart_delete(request):
 
     return HttpResponse('OK')
 
+def categories(request):
 
+    return render_to_response("categories.html")
 

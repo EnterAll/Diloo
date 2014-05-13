@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block extras %} 
+<script src="/static/js/masonry.min.js"></script>
+<style>
+	
+	.item { width: 25%; }
+.item.w2 { width: 50%; }
+</style>
+{% endblock %}
+{% block content %} 
+
+<!-- <div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img data-src="holder.js/300x200" alt="...">
+      <div class="caption">
+        <h3>Thumbnail label</h3>
+        <p>...</p>
+        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+      </div>
+    </div>
+  </div>
+
+
+</div> -->
+
+<div id="container">
+  <div class="item"><div class="thumbnail">
+      <img data-src="holder.js/300x200" alt="...">
+      <div class="caption">
+        <h3>Thumbnail label</h3>
+        <p>...</p>
+        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+      </div>
+    </div></div>
+  <div class="item w2"><div class="thumbnail">
+      <img data-src="holder.js/300x200" alt="...">
+      <div class="caption">
+        <h3>Thumbnail label</h3>
+        <p>...</p>
+        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+      </div>
+    </div></div>
+  <div class="item"></div>
+
+</div>
+
+<script>
+	
+	var container = document.querySelector('#container');
+var msnry = new Masonry( container, {
+  // options
+  columnWidth: 200,
+  itemSelector: '.item'
+});
+</script>
+{% endblock %}
