@@ -14,10 +14,7 @@
     <div class="jumbotron">
         <div class="form">
             <div class="form-group inline">
-                <div id="title" class="editable">
-                    
-                    <h3>Título</h3>
-                </div>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Título">
             </div>
             
             <div class="form-group">
@@ -82,7 +79,7 @@ $('#btnSend').click(function(e){
     $.ajax({
         type: 'POST',
         url: '/ur',
-        data: {title: reviewTitle.title.value , content: reviewContent.content.value, category: category},
+        data: {title: $('#title').val() , content: reviewContent.content.value, category: category},
         success: function(data){
             document.location = '/d/' + data;
         },

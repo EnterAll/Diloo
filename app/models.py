@@ -8,8 +8,13 @@ class Critic(models.Model):
     readers = models.ManyToManyField("self", blank=True)
     to_read = models.ManyToManyField("self", blank=True)
     display_name = models.CharField(max_length=50)
-    image = image = models.URLField()
-    pub_date = models.DateTimeField(auto_now=True, auto_now_add=True)
+    image = models.CharField(max_length=500)
+    pub_date = models.DateTimeField(editable=False)
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.pub_date = datetime.datetime.today()
+        return super(Critic, self).save(*args, **kwargs)
     class Meta:
         verbose_name_plural = "Critics"
     def __unicode__(self):

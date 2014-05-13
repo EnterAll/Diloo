@@ -34,8 +34,11 @@ def feed(request):
     reviews = Review.objects.all().order_by('-pub_date')
     personal_reviews = Review.objects.all()
     if request.user.is_active:
-        print request.user
     	critic = Critic.objects.get(user=request.user)
+        to_read = critic.to_read.all()
+
+        for re in to_read:
+            pass
     	personal_reviews = Review.objects.all().order_by('-pub_date')
     return render_to_response("feed.html", {'categories': categories, 'reviews': reviews, 'user': request.user, 'personal_reviews': personal_reviews, 'critic': critic}, context)
 
@@ -82,7 +85,7 @@ def register(request):
             critic = critic_form.save(commit=False)
 
             critic.user = user
-            critic.image = 'http://tlprojects.com/ajax_local/pics/1.jpg'
+            critic.image = '/static/img/profile.jpg'
             critic.save()
             user2 = authenticate(username=username, password=password)        
             if user2 is not None:
