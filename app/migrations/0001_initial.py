@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
             ('display_name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('image', self.gf('django.db.models.fields.CharField')(max_length=300)),
+            ('image', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('pub_date', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, auto_now_add=True, blank=True)),
         ))
         db.send_create_signal(u'app', ['Critic'])
@@ -62,6 +62,15 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'app', ['Score'])
 
+        # Adding model 'Opinion'
+        db.create_table(u'app_opinion', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('critic', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['app.Critic'])),
+            ('content', self.gf('django.db.models.fields.TextField')()),
+            ('pub_date', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, auto_now_add=True, blank=True)),
+        ))
+        db.send_create_signal(u'app', ['Opinion'])
+
         # Adding model 'Review'
         db.create_table(u'app_review', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -69,7 +78,7 @@ class Migration(SchemaMigration):
             ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['app.Category'])),
             ('pre_content', self.gf('django.db.models.fields.TextField')()),
             ('content', self.gf('django.db.models.fields.TextField')()),
-            ('pub_date', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, auto_now_add=True, blank=True)),
+            ('pub_date', self.gf('django.db.models.fields.DateTimeField')()),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('readings', self.gf('django.db.models.fields.IntegerField')()),
         ))
@@ -93,6 +102,15 @@ class Migration(SchemaMigration):
         ))
         db.create_unique(m2m_table_name, ['review_id', 'score_id'])
 
+        # Adding M2M table for field opinions on 'Review'
+        m2m_table_name = db.shorten_name(u'app_review_opinions')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('review', models.ForeignKey(orm[u'app.review'], null=False)),
+            ('opinion', models.ForeignKey(orm[u'app.opinion'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['review_id', 'opinion_id'])
+
 
     def backwards(self, orm):
         # Deleting model 'Critic'
@@ -113,6 +131,9 @@ class Migration(SchemaMigration):
         # Deleting model 'Score'
         db.delete_table(u'app_score')
 
+        # Deleting model 'Opinion'
+        db.delete_table(u'app_opinion')
+
         # Deleting model 'Review'
         db.delete_table(u'app_review')
 
@@ -121,6 +142,9 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field scores on 'Review'
         db.delete_table(db.shorten_name(u'app_review_scores'))
+
+        # Removing M2M table for field opinions on 'Review'
+        db.delete_table(db.shorten_name(u'app_review_opinions'))
 
 
     models = {
@@ -135,11 +159,18 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Critic'},
             'display_name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
+            'image': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'pub_date': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'auto_now_add': 'True', 'blank': 'True'}),
             'readers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'readers_rel_+'", 'blank': 'True', 'to': u"orm['app.Critic']"}),
             'to_read': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'to_read_rel_+'", 'blank': 'True', 'to': u"orm['app.Critic']"}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+        },
+        u'app.opinion': {
+            'Meta': {'object_name': 'Opinion'},
+            'content': ('django.db.models.fields.TextField', [], {}),
+            'critic': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['app.Critic']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'pub_date': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'auto_now_add': 'True', 'blank': 'True'})
         },
         u'app.review': {
             'Meta': {'object_name': 'Review'},
@@ -147,8 +178,9 @@ class Migration(SchemaMigration):
             'content': ('django.db.models.fields.TextField', [], {}),
             'critic': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['app.Critic']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'opinions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['app.Opinion']", 'symmetrical': 'False', 'blank': 'True'}),
             'pre_content': ('django.db.models.fields.TextField', [], {}),
-            'pub_date': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'auto_now_add': 'True', 'blank': 'True'}),
+            'pub_date': ('django.db.models.fields.DateTimeField', [], {}),
             'readings': ('django.db.models.fields.IntegerField', [], {}),
             'scores': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['app.Score']", 'symmetrical': 'False', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'}),

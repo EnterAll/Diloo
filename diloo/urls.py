@@ -22,6 +22,8 @@ urlpatterns = patterns('',
     url(r'^search$', 'app.views.search', name="search"),
     url(r'^d/(?P<number>\d+)$', 'app.views.review', name="review"),
     url(r'^r/u$', 'app.views.review_upload', name="review_upload"),
+    url(r'^r/h$', 'app.views.review_heart', name="review_heart"),
+    url(r'^r/h/d$', 'app.views.review_heart_delete', name="review_heart_delete"),
     url(r'^ur$', 'app.views.ur', name="ur"),
 )
 

@@ -1,11 +1,8 @@
-{% extends "base.html" %} {%block sidebar %} {% for category in categories %}
-<li>
-    <a href="category/{{category.id}}" class="list-group-item-diloo sidebar-element active-diloo-1">
-        <img src="{{category.image}}" height="40" />{{category.name}}</a>
-</li>
+{% extends "base.html" %}
+{% load humanize %}
+{%block content %} 
 
-
-{% endfor %} {% endblock %} {%block content %} {% if user.is_active %}
+{% if user.is_active %}
 <div id="feed-publico" class="col-sm-8 col-md-6 feed">
     <h1>¿Qué ocurre?</h1>
     {% for review in reviews %}
@@ -14,10 +11,12 @@
 
             <img class="media-object img-rounded" src="{{ review.critic.image }}" width="50" height="50">
         </a>
+        {% autoescape off %}
         <div class="media-body">
-            <h4 class="media-heading">{{ review.title| }}</h4>
+            <h4 class="media-heading">{{review.title}} <small><a href="/d/{{ review.id }}">{{ review.pub_date|naturaltime }}</a></small></h4>
             {{ review.content }}
         </div>
+        {% endautoescape %}
     </div>
     {% endfor %}
 </div>
@@ -30,10 +29,12 @@
 
             <img class="media-object img-rounded" src="{{ preview.critic.image }}" width="50" height="50">
         </a>
+        {% autoescape off %}
         <div class="media-body">
-            <h4 class="media-heading">{{ preview.title }}</h4>
+            <h4 class="media-heading">{{preview.title}} <small><a href="/d/{{ preview.id }}">{{ preview.pub_date|naturaltime }}</a></small></h4>
             {{ preview.content }}
         </div>
+        {% endautoescape %}
     </div>
     {% endfor %}
 </div>
@@ -46,10 +47,12 @@
 
             <img class="media-object img-rounded" src="#" width="50" height="50">
         </a>
+        {% autoescape off %}
         <div class="media-body">
-            <h4 class="media-heading">{{ review.title }}</h4>
+            <h4 class="media-heading">{{review.title}} <small><a href="/d/{{ review.id }}">{{ review.pub_date|naturaltime }}</a></small></h4>
             {{ review.content }}
         </div>
+        {% endautoescape %}
     </div>
     {% endfor %}
 </div>

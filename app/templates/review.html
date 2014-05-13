@@ -1,25 +1,115 @@
 {% extends "base.html"%}
 {% load humanize %}
-{% load markdown_deux_tags %}
+
+{% block extras %} 
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+{% endblock %}
+
+
 {% block content %} 
 {% if review %}
 
 <div class="container">
 	<div class="jumbotron">
-		<h2>{{review.title}} <small>{{review.pub_date|naturaltime}}</small></h2> 
+		{% autoescape off %}
+		<a href="/p/{{ review.critic }}" class="thumbnail pull-left" style="margin-right:10px">
+        	<img src="{{ review.critic.image }}" data-src="holder.js/100x100" width="100" height="100">
+        </a>
+        <div id="heart" class="pull-right" data-id="{{ review.id }}">
+        	{% if isLiked %}
+				<span id="icon-heart" class="glyphicon glyphicon-heart-empty" style="display: none;"></span>
+				<span id="icon-heart-2" class="glyphicon glyphicon-heart" data-id="{{ score.id }}"></span>
+        	{% else %}
+				<span id="icon-heart" class="glyphicon glyphicon-heart-empty"></span>
+				<span id="icon-heart-2" class="glyphicon glyphicon-heart" style="display: none;"></span>
+        	{% endif %}
+        </div>
+		{{review.title}} <small>{{review.pub_date|naturaltime}}</small> 
 
-		<p>{{review.content|markdown:"STYLE"}}</p>
+		<p>{{review.content}}</p>
 
 		<p>{% if review.topics %}
 			{% for topic in review.topics.all %} 
 				{{topic.name}} 
 			{%endfor%}
 			{% endif %}</p>
+
 	</div>
 </div>
+{% endautoescape %}
+{% else %}
 
-{% else %} 
 <h1>No se encuentra la crítica</h1>
 {% endif %}
+
+<script type="text/javascript">
+
+	$('#icon-heart').click(function(e){
+		e.preventDefault();
+		function csrfSafeMethod(method) {
+        
+	        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	    }
+	    var csrftoken = $.cookie('csrftoken');
+	    $.ajaxSetup({
+	        crossDomain: false,
+	        beforeSend: function(xhr, settings) {
+	            if (!csrfSafeMethod(settings.type)) {
+	                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	            }
+	        }
+	    });
+		$.ajax({
+			type: 'POST',
+			url: '/r/h',
+			data: {review: $('#heart').data('id')},
+			success: function(data){
+				console.log(data);
+				$('#icon-heart').hide();
+				$('#icon-heart-2').show();
+				$('#icon-heart-2').attr("data-id", data);
+			}, 
+			error: function(xhr, textStatus, thrownError){
+				alert("Hubo un error");
+	        }
+		});
+		console.log($('#heart').data('id'));
+		return 0;
+	});
+
+	$('#icon-heart-2').click(function(e){
+		e.preventDefault();
+		function csrfSafeMethod(method) {
+        
+	        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	    }
+	    var csrftoken = $.cookie('csrftoken');
+	    $.ajaxSetup({
+	        crossDomain: false,
+	        beforeSend: function(xhr, settings) {
+	            if (!csrfSafeMethod(settings.type)) {
+	                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	            }
+	        }
+	    });
+		$.ajax({
+			type: 'POST',
+			url: '/r/h/d',
+			data: {score: $('#icon-heart-2').data('id')},
+			success: function(data){
+				console.log(data);
+				$('#icon-heart').show();
+				$('#icon-heart-2').hide();
+				$('#icon-heart-2').attr("data-id", data);
+			}, 
+			error: function(xhr, textStatus, thrownError){
+				alert("Hubo un error");
+	        }
+		});
+		console.log($('#heart').data('id'));
+		return 0;
+	});
+
+</script>
 
 {% endblock %} 

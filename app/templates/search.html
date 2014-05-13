@@ -1,4 +1,6 @@
-{% extends "base.html" %} {%block feed %}
+{% extends "base.html" %} 
+{% load humanize %}
+{% block content %}
 
 {% if reviews %}
 <div id="feed-publico" class="col-sm-8 col-md-6 feed">
@@ -9,10 +11,12 @@
 
             <img class="media-object img-rounded" src="{{ review.critic.image }}" width="50" height="50">
         </a>
+        {% autoescape off %}
         <div class="media-body">
-            <h4 class="media-heading">{{ review.title }}</h4>
+            <h4 class="media-heading">{{review.title}} <small><a href="/d/{{ review.id }}">{{ review.pub_date|naturaltime }}</a></small></h4>
             {{ review.content }}
         </div>
+        {% endautoescape %}
     </div>
 
     {% endfor %}
@@ -38,6 +42,7 @@
 {% endif %}
 
 {% if not critics and not reviews%}
-<h1>No se encontraron resultados</h1>
+    <h1>No se encontraron resultados</h1>
 {% endif %}
+
 {% endblock %}

@@ -12,7 +12,8 @@
                 </a>
                 <h2> <a href="/p/{{f_critic}}">@{{f_critic}}</a></h2>
                 <p>Se unió: {{f_critic.pub_date|naturaltime}}</p>
-                Críticas: {{reviews.count}}
+                <p>Críticas: {{reviews.count}}</p>
+                <p><button class="btn btn-primary" onclick="javascript:alert('¿Deseas seguir a {{f_critic.display_name}}?')">Seguir</button></p>
             </div>
         </div>
         <div id="feed-privado" class="hero-unit col-sm-8 col-md-8 feed">
@@ -23,10 +24,12 @@
                         <a class="pull-left" href="/p/{{review.critic}}">
                             <img class="media-object img-rounded" src="{{ review.critic.image }}" width="50" height="50">
                         </a>
+                        {% autoescape off %}
                         <div class="media-body">
-                            <h4 class="media-heading">{{ review.title }} <small>{{review.pub_date|naturaltime}}</small></h4>
+                            <h4 class="media-heading">{{review.title}} <small><a href="/d/{{ review.id }}">{{ review.pub_date|naturaltime }}</a></small></h4>
                             {{ review.content }}
                         </div>
+                        {% endautoescape %}
                     </div>
                 </div>
                 {% endfor %}

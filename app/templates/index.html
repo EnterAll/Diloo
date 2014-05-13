@@ -1,6 +1,5 @@
 {% extends "base.html" %} 
 {% load humanize %}
-{% load markdown_deux_tags %}
 {%block content %}
 <div id="feed-publico" class="col-sm-8 col-md-4 feed">
     <div class="jumbotron">
@@ -54,10 +53,12 @@
                 <a class="pull-left" href="/p/{{review.critic}}">
                     <img class="media-object img-rounded" src="{{ review.critic.image }}" width="50" height="50">
                 </a>
+                {% autoescape off %}
                 <div class="media-body">
                     <h4 class="media-heading">{{review.title}} <small><a href="/d/{{ review.id }}">{{ review.pub_date|naturaltime }}</a></small></h4>
-                    {{ review.content|markdown:"STYLE" }}
+                    {{ review.content }}
                 </div>
+                {% endautoescape %}
             </div>
         </div>
         {% endfor %}

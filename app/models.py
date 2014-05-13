@@ -39,7 +39,7 @@ class Score(models.Model):
     class Meta:
         verbose_name_plural = "Scores"
     def __unicode__(self):
-        return self.critic.user.username + ' - ' + self.avg
+        return self.critic.user.username + ' - ' + str(self.avg)
 
 class Opinion(models.Model):
     critic = models.ForeignKey(Critic)
