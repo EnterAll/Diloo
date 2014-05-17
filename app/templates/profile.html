@@ -1,5 +1,8 @@
 {% extends "base.html" %} 
 {% load humanize %}
+{% block extras %} 
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+{% endblock %}
 {% block content %}
 
 <div class="container">
@@ -13,7 +16,20 @@
                 <h2> <a href="/p/{{f_critic}}">@{{f_critic}}</a></h2>
                 <p>Se unió: {{f_critic.pub_date|naturaltime}}</p>
                 <p>Críticas: {{reviews.count}}</p>
-                <p><button class="btn btn-primary" onclick="javascript:alert('¿Deseas seguir a {{f_critic.display_name}}?')">Seguir</button></p>
+                <p>Lectores: <span id="readers">{{f_critic.readers.count}}</span></p>
+                <p>
+                    {% ifequal f_critic critic %}
+                        <a  class="btn btn-info" data-id="{{ f_critic.id }}">¿A quién lees?</a>
+                    {% else %}
+                        {% if isFollower %}
+                            <a id="unfollow" class="btn btn-danger" data-id="{{ f_critic.id }}">No leer</a>
+                            <a id="follow" class="btn btn-primary" data-id="{{ f_critic.id }}" style="display:none">Leer</a>
+                        {% else %}
+                            <a id="follow" class="btn btn-primary" data-id="{{ f_critic.id }}">Leer</a>
+                            <a id="unfollow" class="btn btn-danger" data-id="{{ f_critic.id }}" style="display:none">No leer</a>
+                        {% endif %}
+                    {% endifequal %}
+                </p>
             </div>
         </div>
         <div id="feed-privado" class="hero-unit col-sm-8 col-md-8 feed">
@@ -48,4 +64,73 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    $(function(){
+        $('#follow').click(function(e){
+            e.preventDefault();
+            function csrfSafeMethod(method) {
+            
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            var csrftoken = $.cookie('csrftoken');
+            $.ajaxSetup({
+                crossDomain: false,
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type)) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: '/follow',
+                data: {to_follow: $('#follow').data('id')},
+                success: function(data){
+                    console.log(data);
+                    $('#follow').hide();
+                    $('#readers').html(data);
+                    $('#unfollow').show();
+                }, 
+                error: function(xhr, textStatus, thrownError){
+                    alert("Hubo un error");
+                }
+            });
+            return 0;
+        });
+
+        $('#unfollow').click(function(e){
+            e.preventDefault();
+            function csrfSafeMethod(method) {
+            
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            var csrftoken = $.cookie('csrftoken');
+            $.ajaxSetup({
+                crossDomain: false,
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type)) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: '/unfollow',
+                data: {to_unfollow: $('#unfollow').data('id')},
+                success: function(data){
+                    console.log(data);
+                    $('#unfollow').hide();
+                    $('#readers').html(data);
+                    $('#follow').show();
+                }, 
+                error: function(xhr, textStatus, thrownError){
+                    alert("Hubo un error");
+                }
+            });
+            console.log($('#heart').data('id'));
+            return 0;
+        });
+    });
+
+</script>
 {% endblock %}

@@ -5,8 +5,8 @@ import datetime
 
 class Critic(models.Model):
     user = models.OneToOneField(User)
-    readers = models.ManyToManyField("self", blank=True)
-    to_read = models.ManyToManyField("self", blank=True)
+    readers = models.ManyToManyField("self", blank=True, related_name="reading",  symmetrical=False)
+    to_read = models.ManyToManyField("self", blank=True, related_name="to_reading", symmetrical=False)
     display_name = models.CharField(max_length=50)
     image = models.CharField(max_length=500)
     pub_date = models.DateTimeField(editable=False)
@@ -66,7 +66,6 @@ class Review(models.Model):
     pub_date = models.DateTimeField(editable=False)
     title = models.CharField(max_length=100) 
     readings = models.IntegerField()
-
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:

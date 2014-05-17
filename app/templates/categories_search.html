@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %} 
+<div class="container">
+		<div id="feed-publico" class="col-sm-10 col-md-8  col-sm-offset-2 feed">
+        <h1>{{category.name}}</h1>
+        {% for review in reviews %}
+        <div class="media post">
+            <a class="pull-left" href="/p/{{review.critic}}">
+
+                <img class="media-object img-rounded" src="{{ review.critic.image }}" width="50" height="50">
+            </a>
+            {% autoescape off %}
+            <div class="media-body">
+                <h4 class="media-heading">{{review.title}} <small><a href="/d/{{ review.id }}">{{ review.pub_date|naturaltime }}</a></small></h4>
+                {{ review.content }}
+            </div>
+            {% endautoescape %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

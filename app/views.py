@@ -2,6 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import Q
+from django.core import serializers
 
 from app.models import Category, Review, Critic, Score
 from app.forms import UserForm, CriticForm, ReviewForm
@@ -107,6 +108,9 @@ def profile(request, username):
     exists = False
     user = None
     critic = None
+    f_critic = None
+    reviews = None
+    isFollower = False
     try:
         user = User.objects.get(username=username)
         
@@ -117,10 +121,13 @@ def profile(request, username):
     if user is not None:
         exists = True
         f_critic = Critic.objects.get(user=user)
+        for c in f_critic.readers.all():
+            if c == critic:
+                isFollower = True
         reviews = Review.objects.filter(critic=f_critic).order_by('-pub_date')
 
 
-    return render_to_response("profile.html", {"critic":critic, "f_critic": f_critic, "exists": exists, "reviews": reviews}, context)
+    return render_to_response("profile.html", {"critic":critic, "f_critic": f_critic, "exists": exists, "reviews": reviews, "isFollower": isFollower}, context)
 
 @login_required(login_url='/login')
 def user_profile(request):
@@ -223,7 +230,47 @@ def review_heart_delete(request):
 
     return HttpResponse('OK')
 
+@login_required(login_url='/login')  
+def follow(request):
+    t_critic = Critic.objects.get(id=request.POST['to_follow'])
+    critic = Critic.objects.get(user=request.user)
+    t_critic.readers.add(critic)
+    t_critic.save()
+    critic.to_read.add(t_critic)
+    critic.save()
+    return HttpResponse(t_critic.readers.count())
+
+@login_required(login_url='/login')  
+def unfollow(request):
+    t_critic = Critic.objects.get(id=request.POST['to_unfollow'])
+    critic = Critic.objects.get(user=request.user)
+    t_critic.readers.remove(critic)
+    t_critic.save()
+    critic.to_read.remove(t_critic)
+    critic.save()
+    return HttpResponse(t_critic.readers.count())
+
 def categories(request):
+    categories = Category.objects.all()
+    return render_to_response("categories.html", {"categories":categories})
 
-    return render_to_response("categories.html")
+def categories_search(request, name):
+    category = Category.objects.get(id=name)
+    reviews = Review.objects.filter(category=category)
 
+    number_reviews = None
+    try:
+        
+        number_reviews = int(request.GET['n'])
+        reviews = Review.objects.filter(category=category).order_by('-pub_date')[:number_reviews]
+        return HttpResponse(serializers.serialize("json", reviews), content_type="application/json")
+    except:
+        pass
+
+    return render_to_response("categories_search.html", {"reviews":reviews, "category":category})
+
+@login_required(login_url='/login')
+def opinion_upload():
+    
+    
+    return render_to_response("categories.html", {"categories":categories})

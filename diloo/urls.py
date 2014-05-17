@@ -26,5 +26,9 @@ urlpatterns = patterns('',
     url(r'^r/h/d$', 'app.views.review_heart_delete', name="review_heart_delete"),
     url(r'^ur$', 'app.views.ur', name="ur"),
     url(r'^categories$', 'app.views.categories', name="categories"),
+    url(r'^categories/(?P<name>\w+)$', 'app.views.categories_search', name="categories_search"),
+    url(r'^follow$', 'app.views.follow', name="follow"),
+    url(r'^unfollow$', 'app.views.unfollow', name="unfollow"),
+    url(r'^embed/(?P<number>\d+)$', 'app.reviews.embed_review', name="embed_review"),
 )
 

@@ -9,7 +9,7 @@
     <title>{% block title %}Dilo-o{% endblock %}</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    {% block style %}<link rel="stylesheet" href="{% static "css/style.css" %}">{% endblock %}
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -24,7 +24,6 @@
     {% block navbar %}
     <nav class="navbar navbar-diloo navbar-fixed-top nav-bar-diloo" role="navigation">
         <div class="container-fluid">
-
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
@@ -39,27 +38,12 @@
                 </a>
                 {% endblock %}
             </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                <form class="navbar-form navbar-right" role="search" action="/s" method="GET">
-                    <div class="form-group">
-                        <input type="text" class="form-control input-rounded" placeholder="Buscar" size="60" name="text">
-                        <button type="submit" class="btn btn-diloo input-rounded">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                    </div>
-
-                </form>
-
+            <div class="collapse navbar-collapse">
                 {% block user%} {% if user.is_active %}
-                <ul class="nav navbar-nav navbar-right">
-                    <a href="/r/u" class="btn btn-diloo input-rounded">
-                        <span class="glyphicon glyphicon-edit"></span>
-                    </a>          
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
+                
+                <ul class="nav navbar-nav navbar-left">
                     <a href="/p/{{critic}}">
-                        <img style="float:left" src="{{ critic.image }}" class="img-circle" width="50" height="50">
+                        <img style="float:left" src="{{ critic.image }}" class="img-square" width="50" height="50">
                     </a>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="caret"></b></a>
@@ -74,10 +58,26 @@
                         </ul>
                     </li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right" style="margin-left:10px;">
+                    <li>
+                        <a href="/r/u" class="btn btn-primary" style="color:#fff">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                    </li>           
+                </ul>
                 {% else %}
                 
                 {% endif %} {% endblock %}
+                <form class="navbar-form navbar-right" role="search" action="/s" method="GET">
+                    <div class="form-group">
+                        <input type="text" class="form-control input-rounded" placeholder="Buscar" size="60" name="text">
+                        <button type="submit" class="btn btn-diloo input-rounded">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </form>
             </div>
+
         </div>
     </nav>
     {% endblock %} 
