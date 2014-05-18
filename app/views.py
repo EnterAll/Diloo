@@ -230,15 +230,20 @@ def review_heart_delete(request):
 
     return HttpResponse('OK')
 
-@login_required(login_url='/login')  
+  
 def follow(request):
-    t_critic = Critic.objects.get(id=request.POST['to_follow'])
-    critic = Critic.objects.get(user=request.user)
-    t_critic.readers.add(critic)
-    t_critic.save()
-    critic.to_read.add(t_critic)
-    critic.save()
-    return HttpResponse(t_critic.readers.count())
+    if request.user.is_active:
+        t_critic = Critic.objects.get(id=int(request.POST['to_follow']))
+        critic = Critic.objects.get(user=request.user)
+        t_critic.readers.add(critic)
+        t_critic.save()
+        critic.to_read.add(t_critic)
+        critic.save()
+        return HttpResponse(t_critic.readers.count())
+    else:
+        return HttpResponse(str(False))
+    
+
 
 @login_required(login_url='/login')  
 def unfollow(request):
@@ -260,7 +265,7 @@ def categories_search(request, name):
 
     number_reviews = None
     try:
-        
+
         number_reviews = int(request.GET['n'])
         reviews = Review.objects.filter(category=category).order_by('-pub_date')[:number_reviews]
         return HttpResponse(serializers.serialize("json", reviews), content_type="application/json")

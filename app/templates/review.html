@@ -3,6 +3,22 @@
 
 {% block extras %} 
 <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@DilooCom">
+<meta name="twitter:title" content="{{review.title}}">
+<meta name="twitter:description" content="{{ review.content|truncatechars:200 }}">
+<meta name="twitter:creator" content="@hugoduar">
+<meta name="twitter:image:src" content="http://www.dilo-o.com/static/img/diloo.jpg">
+<meta name="twitter:domain" content="www.dilo-o.com">
+
+<meta property="og:title" content="{{review.title}}" />
+<meta property="og:site_name" content="Dilo-o"/>
+<meta property="og:url" content="http://www.dilo-o.com/d/{{review.id}}" />
+<meta property="og:description" content="{{ review.content|truncatewords:200 }}" />
+<meta property="og:type" content="article" />
+<meta property="fb:app_id" content="535445969899090" />
+<meta property="og:image" content="{{review.category.image}}" />
 {% endblock %}
 
 
@@ -37,7 +53,9 @@
 		<button id="btnTweet" type="submit" class="btn btn-diloo">Tweet</button></p>
 		<p>
 			<div class="opinions">
-				
+				<div class="form-group">
+                	<input class="form-control" name="username" id="username" placeholder="Nombre de usuario">
+                </div>
 				
 			</div>	
 		</p>

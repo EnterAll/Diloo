@@ -87,6 +87,9 @@
                 data: {to_follow: $('#follow').data('id')},
                 success: function(data){
                     console.log(data);
+                    if (data == "False") {
+                        document.location = "/login";
+                    };
                     $('#follow').hide();
                     $('#readers').html(data);
                     $('#unfollow').show();

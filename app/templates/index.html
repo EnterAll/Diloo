@@ -1,5 +1,23 @@
 {% extends "base.html" %} 
 {% load humanize %}
+{% block extras %} 
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@DilooCom">
+<meta name="twitter:title" content="Dilo-o">
+<meta name="twitter:description" content="Diloo, la revolución, que nunca esperaron">
+<meta name="twitter:image:src" content="http://www.dilo-o.com/static/img/diloo.jpg">
+<meta name="twitter:domain" content="www.dilo-o.com">
+
+<meta property="og:title" content="Dilo-o" />
+<meta property="og:site_name" content="Dilo-o"/>
+<meta property="og:url" content="http://www.dilo-o.com" />
+<meta property="og:description" content="Diloo, la revolución, que nunca esperaron" />
+<meta property="og:type" content="article" />
+<meta property="fb:app_id" content="535445969899090" />
+<meta property="og:image" content="http://www.dilo-o.com/static/img/diloo.jpg" />
+{% endblock %}
 {% block content %}
 <div id="feed-publico" class="col-sm-8 col-md-4 feed">
     <div class="jumbotron">
